@@ -9,20 +9,61 @@ This project is a Job Posting web application built with Vue 3 and Vite. This ai
 - **Job Edit:**: User allow to edit the specific job that has posted
 - **Job delete**: User allow to delete the specific job
 
-# Project Structure
+## Project Structure src/
 
-├── public # Public assets
-├── src
-│ ├── assets # Static assets
-│ ├── components # Vue components (storing all reusable component that can be apply across the project)
-│ ├── views # Application views (storing all view component that basically act like a page.)
-│ ├── router # Vue Router setup (setting page route including static and dynamic page)
-│ ├── App.vue # Main app component (apply component that will show in every page or apply the main layout of the app and include the <RouterView /> )
-│ └── main.js # Application entry point (setting up the vue app)
-├── package.json # Project dependencies and scripts
-└── vite.config.js # vite config
+- **assets/**: Static assets
+- **components/**: Vue components (storing all reusable component that can be apply across the project)ได้
+- **views/**: Application views (storing all view component that basically act like a page.)
+- **assets/**: Static assets
+- **router/index.js**: Vue Router setup (setting page route including static and dynamic page)
+- **App.vue**: Main app component (apply component that will show in every page or apply the main layout of the app and include the <RouterView /> )
+- **main.js**: Application entry point (setting up the vue app)
 
 # Fundamental things to know about VueJs
+
+## Vue using Virtual DOM and component base structure similar to reactJS which each component can also take in props as well.
+
+### Example of creating reusable component in Vue using **Composition API** Card component. This very similar to ReactJS
+
+```vue
+<script setup>
+import { defineProps } from "vue";
+import { RouterLink } from "vue-router";
+
+defineProps({
+  // we call the function defineProps which use to create the Props that this component will take in which each prop can be defined extra property like type , required , default
+  title: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+    default: "Jobs describtion here",
+  },
+  href: {
+    type: String,
+    required: true,
+  },
+  color: {
+    type: String,
+    default: "bg-gray-100",
+  },
+});
+</script>
+
+<template>
+  <div v-bind:class="`${color}  bg-gray-100 p-6 rounded-lg shadow-md `">
+    <h2 class="text-2xl font-bold">{{ title }}</h2>
+    <p class="mt-2 mb-4">{{ description }}</p>
+    <RouterLink
+      v-bind:to="href"
+      class="inline-block bg-black text-white rounded-lg px-4 py-2 hover:bg-gray-700"
+    >
+      Browse Jobs
+    </RouterLink>
+  </div>
+</template>
+```
 
 ## Two Different Ways to Create Components in Vue.js
 
@@ -114,6 +155,43 @@ defineProps({
 </template>
 ```
 
+## Basic and Commonly Used Vue Directives (v-) and Event Modifiers (@)
+
+### Commonly used Vue directives (v-);
+
+- **v-if / v-else-if / v-else** - conditional rendering
+
+```vue
+<script setup>
+import { ref } from "vue";
+
+const isLogin = ref(true);
+</script>
+
+<template>
+  <!-- conditional render the div depenging on the isLogin state -->
+  <!-- the html block element should be stick together to conditional render and use v-if , v-else-if , v-else -->
+  <div v-if="isLoggedIn">Welcome, user!</div>
+  <div v-else>Login to continue.</div>
+</template>
+```
+
+- **v-for** - use to map the to render a list of element (like .map() in javascript) instead we can directly apply v-for to the component we want to iterate and display a list of that component
+
+```vue
+<script setup>
+import { ref } from "vue";
+
+const isLogin = [{ name: "YOYO" }, { name: "YEYE" }];
+</script>
+
+<template>
+  <ul>
+    <li v-for="(item, index) in items" :key="item.index">{{ item.name }}</li>
+  </ul>
+</template>
+```
+
 ## Two important APIs used to create reactive data
 
 - **ref()**: used to create a reactive reference to both primitives (numbers, strings, booleans) or objects. this return an object that has .value property that we can access to them or change the value of it.
@@ -160,47 +238,3 @@ const handleIncrementCount = () => {
 ```
 
 - In comparison to react. Just Imagine that ref() and reactive() are the useState in react that we use to create the state in the component. ref() can be use with both primative value and non-primative value which has .value property that can be accessed or changed. while reactive() is only used for object
-
-## Vue using Virtual DOM and component base structure similar to reactJS which each component can also take in props as well.
-
-### Example of creating reusable component in Vue using **Composition API** Card component. This very similar to ReactJS
-
-```vue
-<script setup>
-import { defineProps } from "vue";
-import { RouterLink } from "vue-router";
-
-defineProps({
-  // we call the function defineProps which use to create the Props that this component will take in which each prop can be defined extra property like type , required , default
-  title: {
-    type: String,
-    required: true,
-  },
-  description: {
-    type: String,
-    default: "Jobs describtion here",
-  },
-  href: {
-    type: String,
-    required: true,
-  },
-  color: {
-    type: String,
-    default: "bg-gray-100",
-  },
-});
-</script>
-
-<template>
-  <div v-bind:class="`${color}  bg-gray-100 p-6 rounded-lg shadow-md `">
-    <h2 class="text-2xl font-bold">{{ title }}</h2>
-    <p class="mt-2 mb-4">{{ description }}</p>
-    <RouterLink
-      v-bind:to="href"
-      class="inline-block bg-black text-white rounded-lg px-4 py-2 hover:bg-gray-700"
-    >
-      Browse Jobs
-    </RouterLink>
-  </div>
-</template>
-```
