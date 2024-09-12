@@ -19,6 +19,32 @@ This project is a Job Posting web application built with Vue 3 and Vite. This ai
 - **App.vue**: Main app component (apply component that will show in every page or apply the main layout of the app and include the <RouterView /> )
 - **main.js**: Application entry point (setting up the vue app)
 
+## Project setup
+
+-install dependencies
+
+```bash
+npm install
+```
+
+-Compile and Hot-Reload for Development (front end)
+
+```bash
+npm run dev
+```
+
+-Compile and run mock server(mock backend)
+
+```bash
+npm run server
+```
+
+-Compile and Minify for Production
+
+```bash
+npm run build
+```
+
 # Fundamental things to know about VueJs
 
 ## Vue using Virtual DOM and component base structure similar to reactJS which each component can also take in props as well.
@@ -192,6 +218,25 @@ const isLogin = [{ name: "YOYO" }, { name: "YEYE" }];
 </template>
 ```
 
+- **v-bind(: for shorthand)** - This binds dynamic attributes to elements or components. Basically make the attributes become dynamic
+
+```vue
+<template>
+  <img :src="imageUrl" alt="Dynamic Image" />
+</template>
+```
+
+- **v-on(@ for shorthand)** - This is used for event listeners (like @click, @submit, etc.).
+
+```vue
+<template>
+  <button @click="submitForm">Submit</button>
+  <button @submit="submitForm">Submit</button>
+  <!--@submit.prevent This prevents the default behavior of a form submission (prevent is refresh the form) -->
+  <form @submit.prevent="submitForm">...</form>
+</template>
+```
+
 ## Two important APIs used to create reactive data
 
 - **ref()**: used to create a reactive reference to both primitives (numbers, strings, booleans) or objects. this return an object that has .value property that we can access to them or change the value of it.
@@ -238,3 +283,88 @@ const handleIncrementCount = () => {
 ```
 
 - In comparison to react. Just Imagine that ref() and reactive() are the useState in react that we use to create the state in the component. ref() can be use with both primative value and non-primative value which has .value property that can be accessed or changed. while reactive() is only used for object
+
+## Common Vue Lifecycle Hooks Explanation
+
+- **onMounted** - run after the component is mount to the DOM commonly use for fetching to API (like useEffect in React)
+
+```vue
+<script setup>
+import { reactive } from "vue";
+
+onMounted(() => {
+  fetchJobListings();
+});
+</script>
+
+<template></template>
+```
+
+- **onBeforeMount** - Called right before the component is added to the DOM. It allows you to initialize data or set up anything you need before rendering.
+
+```vue
+<script setup>
+import { onBeforeMount } from "vue";
+
+onBeforeMount(() => {
+  console.log("onBeforeMount: Component is about to be mounted to the DOM.");
+});
+
+return {};
+</script>
+
+<template>
+  <div>
+    <h1>Component is about to mount...</h1>
+  </div>
+</template>
+```
+
+- **onBeforeUpdate** - This hook is fired before the DOM is updated due to reactive data changes.
+
+```vue
+<script setup>
+import { ref, onBeforeUpdate } from "vue";
+
+const count = ref(0);
+
+onBeforeUpdate(() => {
+  console.log("onBeforeUpdate: Count is about to update.");
+});
+
+const increment = () => {
+  count.value++;
+};
+
+return { count, increment };
+</script>
+
+<template>
+  <div>
+    <h1>Current Count: {{ count }}</h1>
+    <button @click="increment">Increment</button>
+  </div>
+</template>
+```
+
+- **onBeforeUnmount** - This hook runs just before the component is removed from the DOM. Useful for cleaning up things like event listeners or timers.
+
+```vue
+<script setup>
+import { onBeforeUnmount } from "vue";
+
+onBeforeUnmount(() => {
+  console.log(
+    "onBeforeUnmount: Component is about to be unmounted. Clean up here."
+  );
+});
+
+return {};
+</script>
+
+<template>
+  <div>
+    <h1>Component is about to unmount...</h1>
+  </div>
+</template>
+```
